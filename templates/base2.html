@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+<!-- this jinja syntax, inherits the base.html file in the current html file -->
+<!-- example, if i use this command to extend the navbar for each and every page -->
+<!-- I dont have to rewrite the code for each and every html page -->
+
+{% block title %}
+    Homepage
+{% endblock %}
+<!-- this changes the title of the base.html page to 'Homepage'-->
+<!-- this title will not be visible in base.html-->
+
+{% block content %}
+    This is the content for the homepage 
+{% endblock %}
+<!-- same as above -->
+<!-- the content wont be visible in base.html -->
