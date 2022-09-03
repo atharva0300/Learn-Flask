@@ -1,6 +1,7 @@
 from flask import Flask, render_template
 from flask_sqlalchemy import SQLAlchemy
 # importing render_template to return a file 
+from forms import RegisterForm
 
 app = Flask(__name__)
 # creating a flask application 
@@ -12,6 +13,8 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///market.db';
 # the key of the config is 'SQLALCHEMY_DATABASE_URI'
 # and we set the sqllite database
 # name of the database => market
+
+app.config['SECRET_KEY'] = '2a46ac161c157f0d5b899062' 
 
 '''
 app.run(debug = False)
@@ -144,5 +147,9 @@ def market_page2() :
     return render_template('market.html' , item_name = items)
 
 
-if '__name__' == '__main__' : 
-    app.run()
+@app.route('/register') 
+def register_page() : 
+    form = RegisterForm()
+    return render_template('register.html' , form = form)
+    # rendering the html form
+    # passing the form to the html file
