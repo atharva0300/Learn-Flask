@@ -1,8 +1,9 @@
+from nis import cat
 from market import app,db
 from flask import render_template, redirect, url_for, flash
 from market.models import Item, User
 from market.forms import LoginForm, RegisterForm
-from flask_login import login_user
+from flask_login import login_user, logout_user, login_required
 
 
 @app.route('/')
@@ -27,6 +28,8 @@ def about_page(username) :
 
 # creating another route 
 @app.route('/market')
+@login_required
+#mentioning the login requires the user to be loggedin in order to view this page
 def market_page(): 
     items = [
     {'id': 1, 'name': 'Phone', 'barcode': '893212299897', 'price': 500},
@@ -91,6 +94,9 @@ def register_page() :
         db.session.commit()
         # save the changes to the database
 
+        login_user(user_to_create)
+        flash(f'Account created successfully! You are now logged in as {user_to_create.username}' ,category='success')
+
         return redirect(url_for('market_page'))
         # redirecting the url
         # we are not hardcode encoding the url 
@@ -142,7 +148,14 @@ def login_page() :
             # if the login details are not in the database
             flash('Username and password are not match! Please try again' , category='danger')    
 
-
-
-
     return render_template('login.html' , form = form)
+
+
+# route for logout
+@app.route('/logout')
+def logout_page() : 
+    logout_user()
+
+    flash('You have been logged out!' , category='info')
+
+    return redirect(url_for('home_page'))

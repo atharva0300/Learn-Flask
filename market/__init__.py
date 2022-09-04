@@ -18,4 +18,11 @@ bcrypt = Bcrypt(app)
 # creating an instance of the Login manager app
 login_manager = LoginManager(app)
 
+login_manager.login_view = "login_page"
+# if there is unauthorized access to the market page 
+# then redirect it to the login page
+
+login_manager.login_message_category = "info"
+# set the category of the message of the login flash as info
+
 from market import routes
