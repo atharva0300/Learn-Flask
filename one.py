@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, redirect , url_for
 from flask_sqlalchemy import SQLAlchemy
 # importing render_template to return a file 
 from forms import RegisterForm
@@ -79,14 +79,6 @@ class User(db.Model):
 
 
 
-
-
-
-
-
-
-
-
 @app.route('/')
 # adding the homepage location 
 @app.route('/home')
@@ -147,9 +139,45 @@ def market_page2() :
     return render_template('market.html' , item_name = items)
 
 
-@app.route('/register') 
+@app.route('/register' , methods = ["GET" , "POST"]) 
+# allowing the GET and POST request to access this url
+# ommiting the methods will give an error
+# important to mention the methods
 def register_page() : 
     form = RegisterForm()
+
+    # checking validation of the form
+    if form.validate_on_submit() : 
+        print("Form on vaildation : " , form.validate_on_submit)
+
+        user_to_create = User(username = form.username.data , 
+                            email_address = form.email_address.data,
+                            password_hash = form.password1.data)
+        # create a new user 
+        # creating an instance of the User Class 
+        # the username, email_address and password1 are the input labels from the form and not from the User class 
+        # the password_hash  ,email_address , username on the left side of the '=' are from the User class
+
+
+        db.session.add(user_to_create)
+        # add the user to the database 
+        db.session.commit()
+        # save the changes to the database
+
+        return redirect(url_for('market_page'))
+        # redirecting the url
+        # we are not hardcode encoding the url 
+        # the url is dynamic 
+        # redirects to the market_page 
+        # insert the function name in the url_for() method 
+
+
+    if form.errors!={} : 
+        # if there are no errors from the validations 
+        for err_msg in form.errors.values() : 
+            print(f'There was an error with creating a user :  {err_msg}')
+
     return render_template('register.html' , form = form)
+
     # rendering the html form
     # passing the form to the html file
