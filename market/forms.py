@@ -43,6 +43,14 @@ class RegisterForm(FlaskForm) :
     # EqualTo(password1) validates to the password1 field 
     submit = SubmitField(label = "Create Account")
 
+
+
+# creating Login form 
+class LoginForm(FlaskForm) : 
+    username = StringField(label = 'User Name:' , validators=[DataRequired()])
+    password = StringField(label = 'Password:' , validators=[DataRequired()])
+    submit = SubmitField(label = "Sign in")
+
      
 
 
