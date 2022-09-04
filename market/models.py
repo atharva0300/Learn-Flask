@@ -1,5 +1,12 @@
-from market import db
+from market import db, login_manager
 from market import bcrypt
+from flask_login import UserMixin
+
+@login_manager.user_loader
+# using the login manager, to tell that the user has been loggedin 
+# everytime, the user goes to different pages
+def load_user(user_id):
+    return User.query.get(int(user_id))
 
 
 # creating a table from the class
@@ -37,7 +44,8 @@ class Item(db.Model):
 
 
 # creating another table from the class
-class User(db.Model): 
+class User(db.Model , UserMixin):
+    # inheriting from the UserMixin class    
     id = db.Column(db.Integer() , primary_key = True)
     username = db.Column(db.String(length = 30) , nullable = False , unique = True)   
 
@@ -52,6 +60,13 @@ class User(db.Model):
     items = db.relationship('Item' , backref = 'owned_user' ,lazy =True)
     # backref => allows us to see the owner of the item 
     # lazy => setting the lazy to true will return the items in one shot 
+
+    @property
+    def prettier_budget(self) : 
+        if len(str(self.budget)) >=4 : 
+            return f'{str(self.budget)[:-3]},{str(self.budget)[-3:]} INR' 
+        else : 
+            return f"{self.budget} INR"
 
     # using the decorator of property 
     @property
@@ -72,3 +87,8 @@ class User(db.Model):
         # generating the password hash using bcrypt from the plain text password
         # and storing it in password_hash
 
+    def check_password_correction(self , attempted_password) :
+        return bcrypt.check_password_hash(self.password_hash , attempted_password)
+        # returns true if the hash password in the database is the same as the attempted password
+
+    
