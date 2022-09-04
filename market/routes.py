@@ -2,7 +2,7 @@ from nis import cat
 from market import app,db
 from flask import render_template, redirect, url_for, flash
 from market.models import Item, User
-from market.forms import LoginForm, RegisterForm
+from market.forms import LoginForm, RegisterForm, PurchaseItemForm
 from flask_login import login_user, logout_user, login_required
 
 
@@ -31,13 +31,21 @@ def about_page(username) :
 @login_required
 #mentioning the login requires the user to be loggedin in order to view this page
 def market_page(): 
+    purchase_form = PurchaseItemForm()
+    if purchase_form.validate_on_submit() : 
+        print('form validated')
+        # if the purchase item button is clickeds
+        # ie- the form is validated
+        # it happens, when the form is submitted
+        print(purchase_form['purchased_item'])
+
     items = [
     {'id': 1, 'name': 'Phone', 'barcode': '893212299897', 'price': 500},
     {'id': 2, 'name': 'Laptop', 'barcode': '123985473165', 'price': 900},
     {'id': 3, 'name': 'Keyboard', 'barcode': '231985128446', 'price': 150}
     ]
     
-    return render_template('market.html' , item_name = items)
+    return render_template('market.html' , item_name = items , purchase_form = purchase_form)
     # item_name is the key name 
     # items is the value of the key
     # will be using the Jinja tem   plate 
