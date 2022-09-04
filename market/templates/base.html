@@ -15,6 +15,8 @@
    <body>
       <!-- Navbar here -->
       <nav class="navbar navbar-expand-md navbar-dark bg-dark">
+        
+
         <a class="navbar-brand" href="#">Flask Market</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
             <span class="navbar-toggler-icon"></span>
@@ -38,6 +40,29 @@
             </ul>
         </div>
         </nav>
+
+        {% with messages = get_flashed_messages(with_categories = true ) %}
+        <!-- get the flashed messages from the register page in one.py  -->
+        <!-- with category, says about the status of the message, like success or failure -->
+
+            {% if messages %}
+                <!-- checking if the messages is not none-->
+                {% for category,message in messages %}
+                    <!-- iterating the messages -->
+                    <!-- display all the messages -->
+                    <div class = "alert alert-{{ category }}">
+                         <!-- using bootstrap to style the error flashing message -->
+                         <button type = "button" class = "m1-2 mb-1" data-dismiss = "alert" aria-label = "Close">
+                            <span aria-hidden = "true">&times</span>
+                         </button>
+                         {{message}}
+                    </div>
+                   
+                    
+                {% endfor %}
+            {% endif %}
+
+        {% endwith %}
 
 
       <!-- Future Content here -->
